@@ -3,6 +3,8 @@ import * as songDB from '../songDB.js';
 import * as bs from 'react-bootstrap';
 import '../css/editor.css';
 
+import FAIcon from '../components/FAIcon.js';
+
 import 'notochord/src/core.js';
 
 const NEW_SONG = Symbol('NEW_SONG');
@@ -22,15 +24,45 @@ export default class Editor extends Component {
       });
     }
   }
+  onTitleChange(newTitle) {
+    // I don't wanna deep copy it so this'll have to do
+    const song = this.state.song;
+    if(!song || song === NEW_SONG) return; // @todo how do new songs work?
+    song.title = newTitle;
+    this.setState({...this.state, song});
+    songDB.putSong(song);
+  }
   render() {
     const song = this.state.song;
     if(!song) return (<div>Loading...</div>);
     return (
       <div>
-        <h2>{song === NEW_SONG ? 'New Song' : song.title}</h2>
+        <EditableTitle song={song} handleChange={this.onTitleChange.bind(this)} />
         <NotochordRenderer song={song}/>
         <PlaybackControls />
       </div>
+    );
+  }
+}
+
+class EditableTitle extends Component {
+  constructor(props) {
+    super(props);
+    const song = this.props.song;
+    // @todo auto-increment default title?
+    this.state = {title: song === NEW_SONG ? 'New Song' : song.title};
+  }
+  titleChanged(e) {
+    const newTitle = e.target.value;
+    if(newTitle === this.state.title) return; // title didn't change
+    this.setState({...this.state, title: newTitle});
+    this.props.handleChange(newTitle);
+  }
+  render() {
+    return (
+      <bs.Form.Control size="lg" type="text" className="song-editable-title"
+        defaultValue={this.state.title}
+        onBlur={this.titleChanged.bind(this)} /> // onChange felt too often (wasn't onchange similar to onblur? Did react break it?)
     );
   }
 }
@@ -73,7 +105,7 @@ class NotochordRenderer extends Component {
 class PlaybackControls extends Component {
   render() {
     return (
-      <bs.Navbar bg="light" expand="lg">
+      <bs.ButtonToolbar className="notochord-toolbar bg-light">
         <bs.Row className="navbar-row">
           <bs.Col>
             <bs.ButtonGroup className="mr-2">
@@ -126,16 +158,7 @@ class PlaybackControls extends Component {
             </bs.Form.Group>
           </bs.Col>*/}
         </bs.Row>
-      </bs.Navbar>
-    );
-  }
-}
-
-// because react-bootstrap doesn't seem to have a component for this lol
-class FAIcon extends Component {
-  render() {
-    return (
-      <i aria-hidden="true" className={`far fa-${this.props.icon}`}></i>
+      </bs.ButtonToolbar>
     );
   }
 }

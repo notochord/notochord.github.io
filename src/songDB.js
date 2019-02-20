@@ -86,4 +86,13 @@ export async function putSong(data, uid) {
   return tx.complete;
 }
 
+export async function deleteSong(uid) {
+  const db = await dbPromise;
+  const tx = db.transaction('songs', 'readwrite');
+  const store = tx.objectStore('songs');
+  store.delete(uid)
+  observers.forEach(observer => observer());
+  return tx.complete;
+}
+
 // @todo do we want to delete songs? nahh our users don't make mistakes
