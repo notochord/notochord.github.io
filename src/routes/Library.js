@@ -5,6 +5,8 @@ import FAIcon from '../components/FAIcon.js';
 import DeleteModal from '../components/DeleteModal.js';
 import ImportModal from '../components/ImportModal.js';
 
+import '../css/library.css'
+
 import * as songDB from '../songDB.js';
 
 export default class Library extends Component {
@@ -43,7 +45,7 @@ export default class Library extends Component {
       <>
         <h2>My library</h2>
         <bs.ListGroup activeKey={null}>
-          <bs.ListGroup.Item variant="secondary">
+          <bs.ListGroup.Item variant="secondary" className="checkAll">
             <bs.Form.Check
               label={`${this.state.checkedChildren.size} selected`}
               checked={this.state.checkedChildren.size}
