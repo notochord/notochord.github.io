@@ -16,13 +16,6 @@ import './css/fontawesome-free-5.7.2-web/css/all.min.css';
 import './App.css';
 
 export default class App extends Component {
-  /*constructor(props) {
-    super(props);
-    this.state = {song: null};
-  }
-  setSong(song) {
-    this.setState({...this.state, song});
-  }*/
   render() {
     return (
       <div>

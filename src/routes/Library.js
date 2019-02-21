@@ -68,6 +68,22 @@ class LibraryToolbar extends Component {
       songDB.putSong(song);
     });
   }
+  async downloadChecked() {
+    const library = await Promise.all([...this.props.checkedSongs].map(uid => songDB.getSong(uid)));
+    const serialized = encodeURIComponent(JSON.stringify(library));
+
+    //https://ourcodeworld.com/articles/read/189/how-to-create-a-file-and-generate-a-download-with-javascript-in-the-browser-without-a-server
+    var element = document.createElement('a');
+    element.setAttribute('href', 'data:application/json;charset=utf-8,' + serialized);
+    element.setAttribute('download', 'songs.json');
+  
+    element.style.display = 'none';
+    document.body.appendChild(element);
+  
+    element.click();
+  
+    document.body.removeChild(element);
+  }
   render() {
     return (
       <bs.ButtonToolbar className="notochord-toolbar bg-light">
@@ -76,6 +92,9 @@ class LibraryToolbar extends Component {
           </bs.Button>
           <bs.Button onClick={this.duplicateChecked.bind(this)}>
             <FAIcon icon="play-circle" /> Duplicate {this.props.checkedSongs.size}
+          </bs.Button>
+          <bs.Button onClick={this.downloadChecked.bind(this)}>
+            <FAIcon icon="play-circle" /> Download {this.props.checkedSongs.size}
           </bs.Button>
       </bs.ButtonToolbar>
     );

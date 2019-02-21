@@ -6,7 +6,7 @@ export default class Navbar extends Component {
     return (
       <bs.Navbar bg="light" expand="lg" fixed="top">
         <bs.Container>
-          <bs.Navbar.Brand href="#">Notochord</bs.Navbar.Brand>
+          <bs.Navbar.Brand href="/">Notochord</bs.Navbar.Brand>
           <bs.Navbar.Toggle aria-controls="basic-navbar-nav" />
           <bs.Navbar.Collapse id="basic-navbar-nav">
             <div className="mr-auto"></div>

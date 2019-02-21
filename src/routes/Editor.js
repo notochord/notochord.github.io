@@ -7,7 +7,7 @@ import FAIcon from '../components/FAIcon.js';
 
 import 'notochord/src/core.js';
 
-const NEW_SONG = Symbol('NEW_SONG');
+const NEW_SONG = {title: 'New Song'};
 
 export default class Editor extends Component {
   constructor(props) {
@@ -27,7 +27,7 @@ export default class Editor extends Component {
   onTitleChange(newTitle) {
     // I don't wanna deep copy it so this'll have to do
     const song = this.state.song;
-    if(!song || song === NEW_SONG) return; // @todo how do new songs work?
+    if(!song) return; // @todo how do new songs work?
     song.title = newTitle;
     this.setState({...this.state, song});
     songDB.putSong(song);
@@ -50,7 +50,7 @@ class EditableTitle extends Component {
     super(props);
     const song = this.props.song;
     // @todo auto-increment default title?
-    this.state = {title: song === NEW_SONG ? 'New Song' : song.title};
+    this.state = {title: song.title};
   }
   titleChanged(e) {
     const newTitle = e.target.value;
@@ -69,7 +69,6 @@ class EditableTitle extends Component {
 
 class NotochordRenderer extends Component {
   render() {
-    if(this.props.song === NEW_SONG) return (<div id="notochordContainer" className="centeredBlock">Work in progress...</div>);
     return(<div id="notochordContainer" className="centeredBlock"></div>);
   }
   componentDidMount() {
@@ -86,11 +85,17 @@ class NotochordRenderer extends Component {
       'tempo': 160
     });
 
-    if(this.props.song  === NEW_SONG) {
-      // noop
-    } else {
-      window.Notochord.loadSong(new window.Notochord.Song(this.props.song));
+    window.Notochord.loadSong(new window.Notochord.Song(this.props.song));
+
+    // subscribe to changes
+    window.Notochord.events.on('Editor.commitUpdate', this.songChanged.bind(this));
+  }
+  songChanged() {
+    const updatedSong = window.Notochord.currentSong.serialize();
+    if(this.props.song.uid) {
+      updatedSong.uid = this.props.song.uid;
     }
+    songDB.putSong(updatedSong);
   }
 
   shouldComponentUpdate() {
