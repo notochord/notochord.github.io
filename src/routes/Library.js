@@ -42,7 +42,7 @@ export default class Library extends Component {
     return (
       <>
         <h2>My library</h2>
-        <bs.ListGroup>
+        <bs.ListGroup activeKey={null}>
           <bs.ListGroup.Item variant="secondary">
             <bs.Form.Check
               label={`${this.state.checkedChildren.size} selected`}
