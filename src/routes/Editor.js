@@ -36,11 +36,11 @@ export default class Editor extends Component {
     const song = this.state.song;
     if(!song) return (<div>Loading...</div>);
     return (
-      <div>
+      <>
         <EditableTitle song={song} handleChange={this.onTitleChange.bind(this)} />
         <NotochordRenderer song={song}/>
         <PlaybackControls />
-      </div>
+      </>
     );
   }
 }

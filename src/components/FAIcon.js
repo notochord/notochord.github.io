@@ -4,7 +4,7 @@ import React, {Component} from 'react';
 export default class FAIcon extends Component {
   render() {
     return (
-      <i aria-hidden="true" className={`far fa-${this.props.icon}`}></i>
+      <i aria-hidden="true" className={`${this.props.fastyle || 'far'} fa-${this.props.icon}`}></i>
     );
   }
 }
