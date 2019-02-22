@@ -44,7 +44,7 @@ export default class Library extends Component {
     return (
       <>
         <h2>My library</h2>
-        <bs.ListGroup activeKey={null}>
+        <bs.ListGroup activeKey={null} onSelect={() => 0}>
           <bs.ListGroup.Item variant="secondary" className="checkAll">
             <bs.Form.Check
               label={`${this.state.checkedChildren.size} selected`}
@@ -88,7 +88,7 @@ class LibraryToolbar extends Component {
     this.setState({...this.state, showDeleteModal: false});
     if(confirmed) {
       // @todo do this as 1 transaction probably
-      this.props.checkedSongs.forEach(uid => songDB.deleteSong(uid));
+      songDB.deleteSongs(this.props.checkedSongs);
     }
   }
   showImportModal() {
@@ -102,11 +102,13 @@ class LibraryToolbar extends Component {
   }
   duplicateChecked() {
     // heck yeah async
-    this.props.checkedSongs.forEach(async (uid) => {
-      let song = await songDB.getSong(uid);
-      delete song.uid; // hope that doesn't corrupt the copy in the db lol
-      songDB.putSong(song);
-    });
+    Promise.all(
+      [...this.props.checkedSongs].map(async (uid) => {
+        let song = await songDB.getSong(uid);
+        delete song.uid; // hope that doesn't corrupt the copy in the db lol
+        return song;
+      })
+    ).then(songs => songDB.putSongs(songs));
   }
   async downloadChecked() {
     const library = await Promise.all([...this.props.checkedSongs].map(uid => songDB.getSong(uid)));

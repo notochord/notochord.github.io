@@ -55,6 +55,9 @@ const observers = [];
 export function observe(cb) {
   observers.push(cb);
 }
+function notifyObservers() {
+  observers.forEach(observer => observer());
+}
 
 const dbPromise = idb.openDb('songDB', 1, upgradeDb => {
   if (!upgradeDb.objectStoreNames.contains('songs')) {
@@ -63,36 +66,44 @@ const dbPromise = idb.openDb('songDB', 1, upgradeDb => {
   }
 });
 
-export async function getSong(uid) {
+async function getStore(writeAccess) {
   const db = await dbPromise;
-  const tx = db.transaction('songs', 'readonly');
-  const store = tx.objectStore('songs');
+  const tx = db.transaction('songs', writeAccess ? 'readwrite' : 'readonly');
+  return tx.objectStore('songs');
+}
+
+export async function getSong(uid) {
+  const store = await getStore();
   return store.get(uid);
 }
 
 export async function getAllSongs() {
-  const db = await dbPromise;
-  const tx = db.transaction('songs', 'readonly');
-  const store = tx.objectStore('songs');
+  const store = await getStore();
   return store.getAll();
 }
 
-export async function putSong(data, uid) {
-  const db = await dbPromise;
-  const tx = db.transaction('songs', 'readwrite');
-  const store = tx.objectStore('songs');
-  store.put(data, uid);
-  observers.forEach(observer => observer(data));
-  return tx.complete;
+export async function getAllKeys() {
+  const store = await getStore();
+  return store.getAllKeys();
 }
 
-export async function deleteSong(uid) {
-  const db = await dbPromise;
-  const tx = db.transaction('songs', 'readwrite');
-  const store = tx.objectStore('songs');
-  store.delete(uid)
-  observers.forEach(observer => observer());
-  return tx.complete;
+export async function putSong(data) {
+  const store = await getStore(true);
+  const res = store.put(data);
+  notifyObservers();
+  return res;
+}
+
+export async function putSongs(songs) {
+  const store = await getStore(true);
+  for(const song of songs) store.put(song);
+  notifyObservers();
+}
+
+export async function deleteSongs(uids) {
+  const store = await getStore(true);
+  for(const uid of uids) store.delete(uid);
+  notifyObservers();
 }
 
 // @todo do we want to delete songs? nahh our users don't make mistakes
