@@ -6,7 +6,7 @@ export default class EditableTitle extends Component {
     super(props);
     const song = this.props.song;
     // @todo auto-increment default title?
-    this.state = {title: song.title};
+    this.state = {title: song.title, composer: song.composer};
   }
   titleChanged(e) {
     const newTitle = e.target.value;
@@ -14,11 +14,36 @@ export default class EditableTitle extends Component {
     this.setState({...this.state, title: newTitle});
     this.props.handleChange(newTitle);
   }
+  composerChanged(e) {
+    const newComposer = e.target.value;
+    if(newComposer === this.state.somposer) return; // title didn't change
+    this.setState({...this.state, composer: newComposer});
+    this.props.handleChange(null, newComposer);
+  }
   render() {
     return (
-      <bs.Form.Control size="lg" type="text" className="song-editable-title"
-        defaultValue={this.state.title}
-        onBlur={this.titleChanged.bind(this)} /> // onChange felt too often (wasn't onchange similar to onblur? Did react break it?)
+      <bs.Row className="song-editable-title">
+        <bs.Col xs={8}>
+          <bs.InputGroup>
+            <bs.InputGroup.Prepend>
+              <bs.InputGroup.Text>Title</bs.InputGroup.Text>
+            </bs.InputGroup.Prepend>
+            <bs.Form.Control size="lg" type="text"
+              defaultValue={this.state.title}
+              onChange={this.titleChanged.bind(this)} />
+          </bs.InputGroup>
+        </bs.Col>
+        <bs.Col>
+          <bs.InputGroup>
+            <bs.InputGroup.Prepend>
+              <bs.InputGroup.Text>Composer</bs.InputGroup.Text>
+            </bs.InputGroup.Prepend>
+            <bs.Form.Control size="lg" type="text"
+              defaultValue={this.state.composer}
+              onChange={this.composerChanged.bind(this)} />
+          </bs.InputGroup>
+        </bs.Col>
+      </bs.Row>
     );
   }
 }

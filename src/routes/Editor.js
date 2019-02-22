@@ -24,12 +24,18 @@ export default class Editor extends Component {
       });
     }
   }
-  onTitleChange(newTitle) {
+  onTitleChange(newTitle, newComposer) {
     // I don't wanna deep copy it so this'll have to do
     const song = this.state.song;
     if(!song) return; // @todo how do new songs work?
-    song.title = newTitle;
-    window.Notochord.currentSong.title = newTitle;
+    if(newTitle) {
+      song.title = newTitle;
+      window.Notochord.currentSong.title = newTitle;
+    }
+    if(newComposer) {
+      song.composer = newComposer;
+      window.Notochord.currentSong.composer = newComposer;
+    }
     this.onSongChange(song);
   }
   onSongChange(song) {
