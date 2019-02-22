@@ -9,10 +9,7 @@ import * as songDB from '../songDB.js';
 export default class DeleteModal extends Component {
   importFiles(fileData) {
     // @todo: more validation probably
-    fileData.forEach(song => {
-      console.log('g', song);
-      songDB.putSong(song);
-    });
+    songDB.putSongs(fileData);
   }
   onDrop(acceptedFiles, rejectedFiles) {
     acceptedFiles.forEach(file => {

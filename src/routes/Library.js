@@ -96,9 +96,6 @@ class LibraryToolbar extends Component {
   }
   handleImportModalClose(confirmed) {
     this.setState({...this.state, showImportModal: false});
-    if(confirmed) {
-      console.log(44);
-    }
   }
   duplicateChecked() {
     // heck yeah async
