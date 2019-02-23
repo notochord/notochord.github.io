@@ -1,3 +1,14 @@
 .checkAll {
   font-weight: bold;
 }
+.songLibraryItem {
+  display: flex !important;
+}
+.songLibraryCheck {
+  flex: 1;
+}
+.songLibraryComposer {
+  flex: 1;
+  text-align: right;
+  color: #777;
+}

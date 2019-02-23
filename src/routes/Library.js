@@ -66,11 +66,13 @@ class LibraryItem extends Component {
   render() {
     const song = this.props.song;
     return (
-      <bs.ListGroup.Item action href={`/editor/${song.uid}`}>
+      <bs.ListGroup.Item className="songLibraryItem" action href={`/editor/${song.uid}`}>
         <bs.Form.Check
+          className="songLibraryCheck"
           label={song.title}
           checked={this.props.isChecked}
           onChange={e => this.props.checkedStateChanged(song.uid, e.target.checked)}/>
+        <span className="songLibraryComposer">{song.composer}</span>
       </bs.ListGroup.Item>
     );
   }

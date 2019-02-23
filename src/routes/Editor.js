@@ -24,24 +24,21 @@ export default class Editor extends Component {
       });
     }
   }
-  onTitleChange(newTitle, newComposer) {
+  updateSongProp(prop, newValue) {
     // I don't wanna deep copy it so this'll have to do
     const song = this.state.song;
     if(!song) return; // @todo how do new songs work?
-    if(newTitle) {
-      song.title = newTitle;
-      window.Notochord.currentSong.title = newTitle;
-    }
-    if(newComposer) {
-      song.composer = newComposer;
-      window.Notochord.currentSong.composer = newComposer;
-    }
+    if(song[prop] === newValue) return; // no update needed
+    song[prop] = window.Notochord.currentSong[prop] = newValue;
+
     this.onSongChange(song);
   }
   onSongChange(song) {
     if(!song.uid && this.state.song.uid) song.uid = this.state.song.uid;
     songDB.putSong(song).then(newUid => {
-      if(!song.uid) song.uid = newUid;
+      if(!song.uid) {
+        song.uid = window.Notochord.currentSong.uid = newUid;
+      }
     });
     this.setState({...this.state, song});
   }
@@ -50,9 +47,9 @@ export default class Editor extends Component {
     if(!song) return (<div>Loading...</div>);
     return (
       <>
-        <EditableTitle song={song} handleChange={this.onTitleChange.bind(this)} />
+        <EditableTitle song={song} handleChange={this.updateSongProp.bind(this)} />
         <NotochordRenderer song={song} handleChange={this.onSongChange.bind(this)} />
-        <PlaybackControls />
+        <PlaybackControls song={song} handleChange={this.updateSongProp.bind(this)}/>
       </>
     );
   }

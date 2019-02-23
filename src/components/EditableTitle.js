@@ -12,13 +12,13 @@ export default class EditableTitle extends Component {
     const newTitle = e.target.value;
     if(newTitle === this.state.title) return; // title didn't change
     this.setState({...this.state, title: newTitle});
-    this.props.handleChange(newTitle);
+    this.props.handleChange('title', newTitle);
   }
   composerChanged(e) {
     const newComposer = e.target.value;
     if(newComposer === this.state.somposer) return; // title didn't change
     this.setState({...this.state, composer: newComposer});
-    this.props.handleChange(null, newComposer);
+    this.props.handleChange('composer', newComposer);
   }
   render() {
     return (
