@@ -1,6 +1,16 @@
 #page {
   margin-top: 80px;
 }
+
+.notochord-logo-link {
+  max-height: 40px;
+}
+@media (min-width: 576px) {
+  .notochord-logo-link {
+    margin-left: -10px;
+  }
+}
+
 .toolbar-row {
   width: 100%;
 }
