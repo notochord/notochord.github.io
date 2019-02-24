@@ -6,7 +6,9 @@ export default class About extends Component {
       <>
         <h2>About Notochord</h2>
         <p>
-          Notochord is the brainchild of estemed human Jacob Bloom. <a href="https://github.com/notochord/notochord/blob/master/README.md">Learn more here</a>
+          Notochord is a lead-sheet editor and chord player written in
+          JavaSctipt. It's the brainchild of estemed human Jacob Bloom.&nbsp;
+          <a href="https://github.com/notochord/notochord/blob/master/README.md">Learn more here.</a>
         </p>
       </>
     );
