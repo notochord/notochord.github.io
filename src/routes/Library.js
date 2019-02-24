@@ -44,14 +44,16 @@ export default class Library extends Component {
     return (
       <>
         <h2>My library</h2>
-        <bs.ListGroup activeKey={null} onSelect={() => 0}>
+        <bs.ListGroup className="songLibrary" activeKey={null} onSelect={() => 0}>
           <bs.ListGroup.Item variant="secondary" className="checkAll">
             <bs.Form.Check
               label={`${this.state.checkedChildren.size} selected`}
               checked={this.state.checkedChildren.size}
               onChange={this.toggleAllChecks.bind(this)}/>
           </bs.ListGroup.Item>
-          {this.state.songs.map(song => (<LibraryItem key={song.uid} song={song} isChecked={this.state.checkedChildren.has(song.uid)} checkedStateChanged={this.childCheckedStateChanged.bind(this)} />))}
+          <div class="songLibraryScroller">
+            {this.state.songs.map(song => (<LibraryItem key={song.uid} song={song} isChecked={this.state.checkedChildren.has(song.uid)} checkedStateChanged={this.childCheckedStateChanged.bind(this)} />))}
+          </div>
         </bs.ListGroup>
         <LibraryToolbar checkedSongs={this.state.checkedChildren}/>
       </>
