@@ -18,9 +18,9 @@ export default class Library extends Component {
   }
   updateSongState() {
     songDB.getAllSongs().then(songs => {
-      let allUIDs = songs.map(song => song.uid);
+      let allUIDs = songs.map(song => song.get('uid'));
       let newChecked = new Set([...this.state.checkedChildren].filter(uid => allUIDs.includes(uid)));
-      this.setState({...this.state, checkedChildren: newChecked, songs})
+      this.setState({ checkedChildren: newChecked, songs })
     });
   }
   childCheckedStateChanged(childUID, checked) {
@@ -30,14 +30,14 @@ export default class Library extends Component {
     } else {
       newChecked.delete(childUID);
     }
-    this.setState({...this.state, checkedChildren: newChecked});
+    this.setState({ checkedChildren: newChecked });
   }
   toggleAllChecks() {
     if(this.state.checkedChildren.size) {
-      this.setState({...this.state, checkedChildren: new Set()});
+      this.setState({ checkedChildren: new Set()});
     } else {
-      let allUIDs = new Set(this.state.songs.map(song => song.uid));
-      this.setState({...this.state, checkedChildren: allUIDs});
+      let allUIDs = new Set(this.state.songs.map(song => song.get('uid')));
+      this.setState({ checkedChildren: allUIDs});
     }
   }
   render() {
@@ -52,7 +52,7 @@ export default class Library extends Component {
               onChange={this.toggleAllChecks.bind(this)}/>
           </bs.ListGroup.Item>
           <div class="songLibraryScroller">
-            {this.state.songs.map(song => (<LibraryItem key={song.uid} song={song} isChecked={this.state.checkedChildren.has(song.uid)} checkedStateChanged={this.childCheckedStateChanged.bind(this)} />))}
+            {this.state.songs.map(song => (<LibraryItem key={song.get('uid')} song={song} isChecked={this.state.checkedChildren.has(song.get('uid'))} checkedStateChanged={this.childCheckedStateChanged.bind(this)} />))}
           </div>
         </bs.ListGroup>
         <LibraryToolbar checkedSongs={this.state.checkedChildren}/>
@@ -68,13 +68,13 @@ class LibraryItem extends Component {
   render() {
     const song = this.props.song;
     return (
-      <bs.ListGroup.Item className="songLibraryItem" action href={`/editor/${song.uid}`}>
+      <bs.ListGroup.Item className="songLibraryItem" action href={`/editor/${song.get('uid')}`}>
         <bs.Form.Check
           className="songLibraryCheck"
-          label={song.title}
+          label={song.get('title')}
           checked={this.props.isChecked}
-          onChange={e => this.props.checkedStateChanged(song.uid, e.target.checked)}/>
-        <span className="songLibraryComposer">{song.composer}</span>
+          onChange={e => this.props.checkedStateChanged(song.get('uid'), e.target.checked)}/>
+        <span className="songLibraryComposer">{song.get('composer')}</span>
       </bs.ListGroup.Item>
     );
   }
@@ -86,34 +86,34 @@ class LibraryToolbar extends Component {
     this.state = {showDeleteModal: false, showImportModal: false};
   }
   showDeleteModal() {
-    this.setState({...this.state, showDeleteModal: true});
+    this.setState({ showDeleteModal: true});
   }
   handleDeleteModalClose(confirmed) {
-    this.setState({...this.state, showDeleteModal: false});
+    this.setState({ showDeleteModal: false});
     if(confirmed) {
       // @todo do this as 1 transaction probably
       songDB.deleteSongs(this.props.checkedSongs);
     }
   }
   showImportModal() {
-    this.setState({...this.state, showImportModal: true});
+    this.setState({ showImportModal: true});
   }
   handleImportModalClose(confirmed) {
-    this.setState({...this.state, showImportModal: false});
+    this.setState({ showImportModal: false});
   }
   duplicateChecked() {
     // heck yeah async
     Promise.all(
       [...this.props.checkedSongs].map(async (uid) => {
-        let song = await songDB.getSong(uid);
-        delete song.uid; // hope that doesn't corrupt the copy in the db lol
+        const song = await songDB.getSong(uid);
+        song.set('uid', undefined);
         return song;
       })
     ).then(songs => songDB.putSongs(songs));
   }
   async downloadChecked() {
     const library = await Promise.all([...this.props.checkedSongs].map(uid => songDB.getSong(uid)));
-    library.forEach(song => delete song.uid);
+    library.forEach(song => song.set('uid', undefined));
     const serialized = encodeURIComponent(JSON.stringify(library));
 
     //https://ourcodeworld.com/articles/read/189/how-to-create-a-file-and-generate-a-download-with-javascript-in-the-browser-without-a-server

@@ -1,37 +1,47 @@
 import React, {Component} from 'react';
 import * as bs from 'react-bootstrap';
+import { Player, PlaybackStyle } from 'playback';
 
 import FAIcon from './FAIcon.js';
 
 export default class PlaybackControls extends Component {
+  player = new Player();
+  styleMap = {
+    'basic': new PlaybackStyle('basic'),
+    'swing': new PlaybackStyle('swing'),
+    'samba': new PlaybackStyle('samba'),
+  };
+  state = {
+    playDisabled: true,
+  };
   constructor(props) {
     super(props);
-    const song = this.props.song;
-    this.state = {
-      transpose: song.transpose || 'C',
-      tempo: song.tempo || 160,
-      style: song.style || 'samba'
-    };
+    const style = this.styleMap[this.props.song.get('style')];
+    this.player.setStyle(style).then(() => this.setState({ playDisabled: false }));
+  }
+  componentDidMount() {
+    this.props.song.onChange('transpose', () => this.setState({}));
+    this.props.song.onChange('tempo', () => this.setState({}));
+    this.props.song.onChange('style', () => this.setState({}));
   }
   setTranspose(e) {
-    const transpose = e.target.value;
-    this.setState({...this.state, transpose});
-    this.props.handleChange('transpose', transpose);
-    window.Notochord.setTranspose(transpose);
+    const oldTranspose = this.props.song.get('transpose');
+    const newTranspose = e.target.value;
+    if (newTranspose !== oldTranspose) this.props.song.set('transpose', newTranspose);
   }
   setTempo(e) {
-    const tempo = e.target.value;
-    this.setState({...this.state, tempo});
-    this.props.handleChange('tempo', tempo);
-    window.Notochord.setTempo(tempo);
+    const oldTempo = this.props.song.get('tempo');
+    const newTempo = e.target.value;
+    if (newTempo !== oldTempo) this.props.song.set('tempo', newTempo);
   }
   setStyle(e) {
-    // @todo make sure this is getting serialized in notochord?
-    // right now if you change one of these and then the chords everything breaks
-    const style = e.target.value;
-    this.setState({...this.state, style});
-    this.props.handleChange('style', style);
-    window.Notochord.player.setStyle(style);
+    const oldStyle = this.props.song.get('style');
+    const newStyle = e.target.value;
+    if (newStyle !== oldStyle) return;
+    this.props.song.set('style', newStyle);
+    const style = this.styleMap[newStyle];
+    this.setState({ playDisabled: true });
+    this.player.setStyle(style).then(() => this.setState({ playDisabled: false }));
   }
   render() {
     return (
@@ -39,30 +49,30 @@ export default class PlaybackControls extends Component {
         <bs.Row className="navbar-row">
           <bs.Col>
             <bs.ButtonGroup className="mr-2">
-              <bs.Button onClick={window.Notochord.player.play}>
+              <bs.Button onClick={this.play} disabled={this.state.playDisabled}>
                 <FAIcon icon="play-circle" /> Play
               </bs.Button>
-              <bs.Button onClick={window.Notochord.player.stop}>
+              {/* <bs.Button onClick={window.Notochord.player.stop}>
               <FAIcon icon="stop-circle" /> Stop
-              </bs.Button>
+              </bs.Button> */}
             </bs.ButtonGroup>
           </bs.Col>
           <bs.Col>
             <bs.Form.Group controlId="Transpose">
               <bs.Form.Label>Transpose</bs.Form.Label>
               <bs.Form.Control as="select" value={this.state.transpose} onChange={this.setTranspose.bind(this)}>
-                <option>C</option>
-                <option>Db</option>
-                <option>D</option>
-                <option>Eb</option>
-                <option>E</option>
-                <option>F</option>
-                <option>Gb</option>
-                <option>G</option>
-                <option>Ab</option>
-                <option>A</option>
-                <option>Bb</option>
-                <option>B</option>
+                <option value="0">C</option>
+                <option value="1">Db</option>
+                <option value="2">D</option>
+                <option value="3">Eb</option>
+                <option value="4">E</option>
+                <option value="5">F</option>
+                <option value="6">Gb</option>
+                <option value="7">G</option>
+                <option value="8">Ab</option>
+                <option value="9">A</option>
+                <option value="10">Bb</option>
+                <option value="11">B</option>
               </bs.Form.Control>
             </bs.Form.Group>
           </bs.Col>
@@ -77,7 +87,9 @@ export default class PlaybackControls extends Component {
             <bs.Form.Group controlId="Style">
               <bs.Form.Label>Style</bs.Form.Label>
               <bs.Form.Control as="select" value={this.state.style} onChange={this.setStyle.bind(this)}>
-                {[...window.Notochord.player.styles.keys()].map(style => (<option key={style}>{style}</option>))}
+              <option key="basic">Basic</option>
+              <option key="swing">Swing</option>
+              <option key="samba">Samba</option>
               </bs.Form.Control>
             </bs.Form.Group>
           </bs.Col>

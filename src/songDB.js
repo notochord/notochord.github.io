@@ -1,54 +1,10 @@
 import * as idb from 'idb';
+import Song from 'notochord-song';
+import BlueSkiesSerialized from 'notochord-song/blueSkies.mjs';
 
 if (!('indexedDB' in window)) {
   throw new Error('This browser does not support IndexedDB');
 }
-
-const BLUE_SKIES = {
-  'title': 'Blue Skies',
-  'composer': 'Irving Berlin',
-  'timeSignature': [4,4],
-  'key': 'C',
-  'measures': [
-    {
-      'beats': ['A-'], // The first beat of every measure must be set.
-      'repeatStart': true,
-      'maxRepeats': 1
-    },
-    {
-      'beats': ['E']
-    },
-    {
-      'beats': ['A-7']
-    },
-    {
-      'beats': ['A-6']
-    },
-    {
-      'beats': ['CM7', undefined, 'A7']
-    },
-    {
-      'beats': ['D-7', undefined, 'G7']
-    },
-    {
-      'beats': ['C6'],
-      'ending': 1
-    },
-    {
-      'beats': ['Bdim', undefined, 'E7'],
-      'repeatEnd': true,
-      'ending': 1
-    },
-    {
-      'beats': ['C6'],
-      'ending': 2
-    },
-    {
-      'beats': ['C6'],
-      'ending': 2
-    }
-  ]
-};
 
 // because IDBObserver isn't standardized yet
 const observers = [];
@@ -62,7 +18,7 @@ function notifyObservers() {
 const dbPromise = idb.openDb('songDB', 1, upgradeDb => {
   if (!upgradeDb.objectStoreNames.contains('songs')) {
     let songs = upgradeDb.createObjectStore('songs', {keyPath: 'uid', autoIncrement:true});
-    songs.put(BLUE_SKIES);
+    songs.put(BlueSkiesSerialized);
   }
 });
 
@@ -74,12 +30,14 @@ async function getStore(writeAccess) {
 
 export async function getSong(uid) {
   const store = await getStore();
-  return store.get(uid);
+  const serialized = await store.get(uid);
+  return new Song(serialized);
 }
 
 export async function getAllSongs() {
   const store = await getStore();
-  return store.getAll();
+  const serialized = await store.getAll();
+  return serialized.map(s => new Song(s));
 }
 
 export async function getAllKeys() {
@@ -87,16 +45,19 @@ export async function getAllKeys() {
   return store.getAllKeys();
 }
 
-export async function putSong(data) {
+export async function putSong(song) {
   const store = await getStore(true);
-  const res = store.put(data);
+  const uid = store.put(song.serialize());
+  if (!song.get('uid')) song.set('uid', uid);
   notifyObservers();
-  return res;
 }
 
 export async function putSongs(songs) {
   const store = await getStore(true);
-  for(const song of songs) store.put(song);
+  for(const song of songs) {
+    const uid = store.put(song.serialize());
+    if (!song.get('uid')) song.set('uid', uid);
+  }
   notifyObservers();
 }
 

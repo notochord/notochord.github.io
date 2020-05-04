@@ -4,7 +4,9 @@
   "private": true,
   "dependencies": {
     "idb": "^3.0.2",
-    "notochord": "git+https://github.com/notochord/notochord.git#0.1",
+    "notochord-editor": "git+https://github.com/notochord/notochord-editor.git#1.1.0",
+    "notochord-song": "git+https://github.com/notochord/notochord-song.git#3.0.0",
+    "playback": "git+https://github.com/notochord/playback.git#0.1.1",
     "react": "^16.8.2",
     "react-bootstrap": "^1.0.0-beta.5",
     "react-dom": "^16.8.2",
@@ -13,6 +15,7 @@
     "react-scripts": "2.1.5"
   },
   "scripts": {
+    "link": "npm link ~/git/notochord-editor; npm link ~/git/notochord-song; npm link ~/git/playback",
     "start": "react-scripts start",
     "build": "react-scripts build",
     "test": "react-scripts test",

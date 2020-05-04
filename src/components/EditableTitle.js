@@ -2,23 +2,19 @@ import React, {Component} from 'react';
 import * as bs from 'react-bootstrap';
 
 export default class EditableTitle extends Component {
-  constructor(props) {
-    super(props);
-    const song = this.props.song;
-    // @todo auto-increment default title?
-    this.state = {title: song.title, composer: song.composer};
+  componentDidMount() {
+    this.props.song.onChange('title', () => this.setState({}));
+    this.props.song.onChange('composer', () => this.setState({}));
   }
   titleChanged(e) {
+    const oldTitle = this.props.song.get('title');
     const newTitle = e.target.value;
-    if(newTitle === this.state.title) return; // title didn't change
-    this.setState({...this.state, title: newTitle});
-    this.props.handleChange('title', newTitle);
+    if(newTitle !== oldTitle) this.props.song.set('title', newTitle);
   }
   composerChanged(e) {
+    const oldComposer = this.props.song.get('composer');
     const newComposer = e.target.value;
-    if(newComposer === this.state.somposer) return; // title didn't change
-    this.setState({...this.state, composer: newComposer});
-    this.props.handleChange('composer', newComposer);
+    if(newComposer !== oldComposer) this.props.song.set('composer', newComposer);
   }
   render() {
     return (
@@ -29,7 +25,7 @@ export default class EditableTitle extends Component {
               <bs.InputGroup.Text>Title</bs.InputGroup.Text>
             </bs.InputGroup.Prepend>
             <bs.Form.Control size="lg" type="text"
-              defaultValue={this.state.title}
+              value={this.props.song.get('title')}
               onChange={this.titleChanged.bind(this)} />
           </bs.InputGroup>
         </bs.Col>
@@ -39,7 +35,7 @@ export default class EditableTitle extends Component {
               <bs.InputGroup.Text>Composer</bs.InputGroup.Text>
             </bs.InputGroup.Prepend>
             <bs.Form.Control size="lg" type="text"
-              defaultValue={this.state.composer}
+              value={this.props.song.get('composer')}
               onChange={this.composerChanged.bind(this)} />
           </bs.InputGroup>
         </bs.Col>
