@@ -1,0 +1,232 @@
+/*
+object-assign
+(c) Sindre Sorhus
+@license MIT
+*/
+
+/*!
+	Copyright (c) 2018 Jed Watson.
+	Licensed under the MIT License (MIT), see
+	http://jedwatson.github.io/classnames
+*/
+
+/*! exports provided: 4, 5, 7, 9, 11, 13, 64, M, M#5, M#5add9, M13, M13#11, M6, M6#11, M69, M69#11, M7#11, M7#5, M7#5sus4, M7#9#11, M7add13, M7b5, M7b6, M7b9, M7sus4, M9, M9#11, M9#5, M9#5sus4, M9b5, M9sus4, Madd9, Maj7, Mb5, Mb6, Msus2, Msus4, Maddb9, 11b9, 13#11, 13#9, 13#9#11, 13b5, 13b9, 13b9#11, 13no5, 13sus4, 69#11, 7#11, 7#11b13, 7#5, 7#5#9, 7#5b9, 7#5b9#11, 7#5sus4, 7#9, 7#9#11, 7#9#11b13, 7#9b13, 7add6, 7b13, 7b5, 7b6, 7b9, 7b9#11, 7b9#9, 7b9b13, 7b9b13#11, 7no5, 7sus4, 7sus4b9, 7sus4b9b13, 9#11, 9#11b13, 9#5, 9#5#11, 9b13, 9b5, 9no5, 9sus4, m, m#5, m11, m11A 5, m11b5, m13, m6, m69, m7, m7#5, m7add11, m7b5, m9, m9#5, m9b5, mMaj7, mMaj7b6, mM9, mM9b6, mb6M7, mb6b9, o, o7, o7M7, oM7, sus24, +add#9, madd4, madd9, default */
+
+/*! exports provided: Array, Note, Interval, Distance, Scale, Chord, PcSet, Dictionary, transpose, interval, note, midi, freq, chord, scale */
+
+/*! exports provided: chroma, chromas, modes, isChroma, intervals, isEqual, isSubsetOf, isSupersetOf, includes, filter */
+
+/*! exports provided: chromatic, lydian, major, mixolydian, dorian, aeolian, phrygian, locrian, melodic minor, melodic minor second mode, lydian augmented, lydian dominant, melodic minor fifth mode, locrian #2, altered, harmonic minor, phrygian dominant, half-whole diminished, diminished, major pentatonic, lydian pentatonic, mixolydian pentatonic, locrian pentatonic, minor pentatonic, minor six pentatonic, minor hexatonic, flat three pentatonic, flat six pentatonic, major flat two pentatonic, whole tone pentatonic, ionian pentatonic, lydian #5P pentatonic, lydian dominant pentatonic, minor #7M pentatonic, super locrian pentatonic, in-sen, iwato, hirajoshi, kumoijoshi, pelog, vietnamese 1, vietnamese 2, prometheus, prometheus neopolitan, ritusen, scriabin, piongio, major blues, minor blues, composite blues, augmented, augmented heptatonic, dorian #4, lydian diminished, whole tone, leading whole tone, lydian minor, locrian major, neopolitan, neopolitan minor, neopolitan major, neopolitan major pentatonic, romanian minor, double harmonic lydian, harmonic major, double harmonic major, egyptian, hungarian minor, hungarian major, oriental, spanish heptatonic, flamenco, balinese, todi raga, malkos raga, kafi raga, purvi raga, persian, bebop, bebop dominant, bebop minor, bebop major, bebop locrian, minor bebop, mystery #1, enigmatic, minor six diminished, ionian augmented, lydian #9, ichikosucho, six tone symmetric, default */
+
+/*! exports provided: default */
+
+/*! exports provided: dictionary, combine, scale, chord, pcset */
+
+/*! exports provided: names, props, intervals, notes, exists, supersets, subsets, tokenize */
+
+/*! exports provided: names, tokenize, props, name, pc, midi, midiToFreq, freq, freqToMidi, chroma, oct, stepToLetter, altToAcc, from, build, fromMidi, simplify, enharmonic */
+
+/*! exports provided: names, tokenize, qToAlt, altToQ, props, num, name, semitones, chroma, ic, build, simplify, invert, fromSemitones */
+
+/*! exports provided: props, names, intervals, notes, exists, tokenize, modeNames, chords, toScale, supersets, subsets */
+
+/*! exports provided: range, rotate, compact, sort, unique, shuffle, permutations */
+
+/*! exports provided: regex, parse, build, midi, freq, letter, acc, pc, step, alt, chroma, oct */
+
+/*! exports provided: transpose, trFifths, fifths, transposeBy, addIntervals, add, subtract, interval, semitones */
+
+/*! no static exports found */
+
+/*! regenerator-runtime -- Copyright (c) 2014-present, Facebook, Inc. -- license (MIT): https://github.com/facebook/regenerator/blob/main/LICENSE */
+
+/*!*********************!*\
+  !*** ./src/core.js ***!
+  \*********************/
+
+/*!***********************!*\
+  !*** ./src/events.js ***!
+  \***********************/
+
+/*!**************************!*\
+  !*** ./src/song/song.js ***!
+  \**************************/
+
+/*!*****************************!*\
+  !*** ./src/song/measure.js ***!
+  \*****************************/
+
+/*!******************************!*\
+  !*** ./src/player/player.js ***!
+  \******************************/
+
+/*!******************************!*\
+  !*** ./src/viewer/editor.js ***!
+  \******************************/
+
+/*!******************************!*\
+  !*** ./src/viewer/viewer.js ***!
+  \******************************/
+
+/*!********************************!*\
+  !*** ./src/player/playback.js ***!
+  \********************************/
+
+/*!********************************!*\
+  !*** ./src/viewer/beatview.js ***!
+  \********************************/
+
+/*!**********************************!*\
+  !*** ./src/viewer/viewer.css.js ***!
+  \**********************************/
+
+/*!***********************************!*\
+  !*** ./src/viewer/measureview.js ***!
+  \***********************************/
+
+/*!************************************!*\
+  !*** ./node_modules/adsr/index.js ***!
+  \************************************/
+
+/*!************************************!*\
+  !*** ./src/player/styles/basic.js ***!
+  \************************************/
+
+/*!************************************!*\
+  !*** ./src/player/styles/samba.js ***!
+  \************************************/
+
+/*!************************************!*\
+  !*** ./src/player/styles/swing.js ***!
+  \************************************/
+
+/*!*************************************!*\
+  !*** ./node_modules/tonal/index.js ***!
+  \*************************************/
+
+/*!*******************************************!*\
+  !*** ./node_modules/note-parser/index.js ***!
+  \*******************************************/
+
+/*!**********************************************!*\
+  !*** ./node_modules/tonal-note/build/es6.js ***!
+  \**********************************************/
+
+/*!***********************************************!*\
+  !*** ./node_modules/tonal-array/build/es6.js ***!
+  \***********************************************/
+
+/*!***********************************************!*\
+  !*** ./node_modules/tonal-chord/build/es6.js ***!
+  \***********************************************/
+
+/*!***********************************************!*\
+  !*** ./node_modules/tonal-pcset/build/es6.js ***!
+  \***********************************************/
+
+/*!***********************************************!*\
+  !*** ./node_modules/tonal-scale/build/es6.js ***!
+  \***********************************************/
+
+/*!***********************************************!*\
+  !*** ./src/viewer/resources/svg_constants.js ***!
+  \***********************************************/
+
+/*!************************************************!*\
+  !*** ./node_modules/audio-loader/lib/fetch.js ***!
+  \************************************************/
+
+/*!************************************************!*\
+  !*** ./node_modules/audio-loader/lib/index.js ***!
+  \************************************************/
+
+/*!************************************************!*\
+  !*** ./node_modules/sample-player/lib/midi.js ***!
+  \************************************************/
+
+/*!*************************************************!*\
+  !*** ./node_modules/audio-loader/lib/base64.js ***!
+  \*************************************************/
+
+/*!*************************************************!*\
+  !*** ./node_modules/sample-player/lib/index.js ***!
+  \*************************************************/
+
+/*!*************************************************!*\
+  !*** ./node_modules/sample-player/lib/notes.js ***!
+  \*************************************************/
+
+/*!**************************************************!*\
+  !*** ./node_modules/sample-player/lib/events.js ***!
+  \**************************************************/
+
+/*!**************************************************!*\
+  !*** ./node_modules/sample-player/lib/player.js ***!
+  \**************************************************/
+
+/*!**************************************************!*\
+  !*** ./node_modules/tonal-distance/build/es6.js ***!
+  \**************************************************/
+
+/*!**************************************************!*\
+  !*** ./node_modules/tonal-interval/build/es6.js ***!
+  \**************************************************/
+
+/*!****************************************************!*\
+  !*** ./node_modules/midimessage/dist/index.min.js ***!
+  \****************************************************/
+
+/*!****************************************************!*\
+  !*** ./node_modules/soundfont-player/lib/index.js ***!
+  \****************************************************/
+
+/*!****************************************************!*\
+  !*** ./node_modules/tonal-dictionary/build/es6.js ***!
+  \****************************************************/
+
+/*!*****************************************************!*\
+  !*** ./node_modules/sample-player/lib/scheduler.js ***!
+  \*****************************************************/
+
+/*!*****************************************************!*\
+  !*** ./node_modules/soundfont-player/lib/legacy.js ***!
+  \*****************************************************/
+
+/*!**************************************************************!*\
+  !*** ./node_modules/tonal-dictionary/build/data/chords.json ***!
+  \**************************************************************/
+
+/*!**************************************************************!*\
+  !*** ./node_modules/tonal-dictionary/build/data/scales.json ***!
+  \**************************************************************/
+
+/*!**********************************************************************!*\
+  !*** ./node_modules/sample-player/node_modules/note-parser/index.js ***!
+  \**********************************************************************/
+
+/** @license React v0.19.1
+ * scheduler.production.min.js
+ *
+ * Copyright (c) Facebook, Inc. and its affiliates.
+ *
+ * This source code is licensed under the MIT license found in the
+ * LICENSE file in the root directory of this source tree.
+ */
+
+/** @license React v16.14.0
+ * react-dom.production.min.js
+ *
+ * Copyright (c) Facebook, Inc. and its affiliates.
+ *
+ * This source code is licensed under the MIT license found in the
+ * LICENSE file in the root directory of this source tree.
+ */
+
+/** @license React v16.14.0
+ * react.production.min.js
+ *
+ * Copyright (c) Facebook, Inc. and its affiliates.
+ *
+ * This source code is licensed under the MIT license found in the
+ * LICENSE file in the root directory of this source tree.
+ */

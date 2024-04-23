@@ -1,0 +1,9 @@
+.dropzone {
+  border: 4px dashed transparent;
+  padding: 10px;
+  border-radius: 5px;
+}
+
+.dropzone.dropzoneActive {
+  border-color: lightblue;
+}

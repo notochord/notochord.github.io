@@ -1,0 +1,30 @@
+.songLibraryScroller {
+  max-height: 60vh;
+  overflow-y: scroll;
+  border-bottom-left-radius: .25rem;
+  border-bottom-right-radius: .25rem;
+  border-bottom: 1px solid rgba(0,0,0,.125);
+}
+.checkAll {
+  font-weight: bold;
+}
+.songLibraryItem {
+  display: flex !important;
+}
+.songLibraryItem:first-child {
+  border-top-left-radius: 0 !important;
+  border-top-right-radius: 0 !important;
+}
+.songLibraryItem:last-child {
+  border-bottom: none;
+  border-bottom-left-radius: 0 !important;
+  border-bottom-right-radius: 0 !important;
+}
+.songLibraryCheck {
+  flex: 1;
+}
+.songLibraryComposer {
+  flex: 1;
+  text-align: right;
+  color: #777;
+}

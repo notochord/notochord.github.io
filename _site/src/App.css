@@ -1,0 +1,25 @@
+#page {
+  margin-top: 80px;
+}
+
+.notochord-logo-link {
+  max-height: 40px;
+}
+@media (min-width: 576px) {
+  .notochord-logo-link {
+    margin-left: -10px;
+  }
+}
+
+.toolbar-row {
+  width: 100%;
+}
+.notochord-toolbar {
+  padding: 8px;
+  border-radius: 5px;
+  margin-top: 10px;
+}
+
+.notochord-toolbar > *:not(:first-child) {
+  margin-left: 8px;
+}
